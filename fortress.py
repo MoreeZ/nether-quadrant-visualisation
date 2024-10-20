@@ -7,10 +7,7 @@ from matplotlib.lines import Line2D
 QUADRANT_SIZE = 432
 QUADRANT_GAP = 64
 
-# Hardcoded output file
-OUTPUT_FILE = "fortress_plot.png"
-
-def locate_fortress(x, z):
+def locate_fortress(x, z, output_file):
     # Calculate the quadrant of the input position
     x_quadrant = math.floor(x / QUADRANT_SIZE)
     z_quadrant = math.floor(z / QUADRANT_SIZE)
@@ -27,11 +24,14 @@ def locate_fortress(x, z):
     print(f"TO X: {x_quad_end}, Z: {z_quad_end}")
 
     # Plot the Cartesian plane with the quadrants and the input point
-    plot_quadrant_and_position(x, z, x_quad_start, z_quad_start, x_quad_end, z_quad_end)
+    plot_quadrant_and_position(x, z, x_quad_start, z_quad_start, x_quad_end, z_quad_end, output_file)
 
-def plot_quadrant_and_position(x, z, x_quad_start, z_quad_start, x_quad_end, z_quad_end):
+def plot_quadrant_and_position(x, z, x_quad_start, z_quad_start, x_quad_end, z_quad_end, output_file):
     # Increase the figure size (width=10 inches, height=10 inches)
     fig, ax = plt.subplots(figsize=(10, 10))
+
+    # Track the unique intersection points to avoid labeling duplicates
+    labeled_points = set()
 
     # Define the 9 quadrants (3x3 grid) centered on the input quadrant
     for i in range(-1, 2):  # Three rows: above, centered, below
@@ -42,12 +42,6 @@ def plot_quadrant_and_position(x, z, x_quad_start, z_quad_start, x_quad_end, z_q
             rect = plt.Rectangle((x_offset, z_offset), QUADRANT_SIZE, QUADRANT_SIZE,
                                  linewidth=1, edgecolor='blue', facecolor='none')
             ax.add_patch(rect)
-
-            # Add quadrant edge labels (at the corners of each quadrant)
-            ax.text(x_offset, z_offset, f'({x_offset}, {z_offset})', fontsize=8, verticalalignment='top')
-            ax.text(x_offset + QUADRANT_SIZE, z_offset, f'({x_offset + QUADRANT_SIZE}, {z_offset})', fontsize=8, verticalalignment='top', horizontalalignment='right')
-            ax.text(x_offset, z_offset + QUADRANT_SIZE, f'({x_offset}, {z_offset + QUADRANT_SIZE})', fontsize=8, verticalalignment='bottom')
-            ax.text(x_offset + QUADRANT_SIZE, z_offset + QUADRANT_SIZE, f'({x_offset + QUADRANT_SIZE}, {z_offset + QUADRANT_SIZE})', fontsize=8, verticalalignment='bottom', horizontalalignment='right')
 
             # Calculate the inner "green" region for each quadrant
             inner_x_start = x_offset
@@ -61,9 +55,16 @@ def plot_quadrant_and_position(x, z, x_quad_start, z_quad_start, x_quad_end, z_q
                                        linewidth=1, edgecolor='green', facecolor='lightgreen', linestyle='--')
             ax.add_patch(rect_inner)
 
-    # Plot the input point as a red dot and annotate it
+            # Add label at the intersection of quadrants if not already labeled (shifted 10 units higher)
+            if (x_offset, z_offset) not in labeled_points:
+                ax.text(x_offset, z_offset - 10, f"({x_offset}, {z_offset})", fontsize=8, ha='center', color='blue')
+                labeled_points.add((x_offset, z_offset))
+
+    # Plot the input point as a red dot
     ax.plot(x, z, 'ro', label=f"Input Position ({x}, {z})")
-    ax.text(x, z, f'({x}, {z})', fontsize=10, verticalalignment='bottom', horizontalalignment='center', color='red')
+
+    # Label for the player's position (shifted 10 units higher)
+    ax.text(x, z - 10, f"Player ({x}, {z})", fontsize=10, ha='right', color='red')
 
     # Set limits for the plot based on the surrounding quadrants, ensuring the red dot is centered
     x_margin = QUADRANT_SIZE * 1.5
@@ -77,10 +78,6 @@ def plot_quadrant_and_position(x, z, x_quad_start, z_quad_start, x_quad_end, z_q
     # Set equal aspect ratio to make the chart square
     ax.set_aspect('equal')
 
-    # Hide default ticks
-    ax.set_xticks([])
-    ax.set_yticks([])
-
     # Add grid lines and labels
     ax.grid(True)
     ax.set_xlabel('X Coordinate')
@@ -93,16 +90,17 @@ def plot_quadrant_and_position(x, z, x_quad_start, z_quad_start, x_quad_end, z_q
     ax.legend(handles=[fortress_patch, player_dot], loc='upper left')
 
     # Save the plot as an image file
-    plt.savefig(OUTPUT_FILE, bbox_inches='tight')
-    print(f"Plot saved as {OUTPUT_FILE}")
+    plt.savefig(output_file, bbox_inches='tight')
+    print(f"Plot saved as {output_file}")
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print("Usage: python fortress.py <x_position> <z_position>")
+    if len(sys.argv) != 4:
+        print("Usage: python fortress.py <x_position> <z_position> <output_file>")
     else:
         try:
             x = float(sys.argv[1])
             z = float(sys.argv[2])
-            locate_fortress(x, z)
+            output_file = sys.argv[3]
+            locate_fortress(x, z, output_file)
         except ValueError:
             print("Please provide valid numerical inputs for x and z.")
