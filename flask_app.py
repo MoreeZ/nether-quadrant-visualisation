@@ -2,6 +2,7 @@ from flask import Flask, request, send_file
 import subprocess
 import uuid
 import os
+from quadrants import locate_quadrants  # Import the function from fortress.py
 
 app = Flask(__name__)
 
@@ -15,8 +16,8 @@ def quadrants():
         return {"error": "Please provide both x_pos and z_pos"}, 400
 
     try:
-        # Run the quadrants.py file with x_pos and z_pos as arguments
-        subprocess.run(['python', 'quadrants.py', x_pos, z_pos, output_file], check=True)
+        # Run the locate_quadrants function with x_pos and z_pos amd output_file as arguments
+        locate_quadrants(x_pos, z_pos, output_file)
 
         # Return the generated image
         response = send_file(output_file, mimetype='image/png')

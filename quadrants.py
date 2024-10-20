@@ -7,7 +7,7 @@ from matplotlib.lines import Line2D
 QUADRANT_SIZE = 432
 QUADRANT_GAP = 64
 
-def locate_fortress(x, z, output_file):
+def locate_quadrants(x, z, output_file):
     # Calculate the quadrant of the input position
     x_quadrant = math.floor(x / QUADRANT_SIZE)
     z_quadrant = math.floor(z / QUADRANT_SIZE)
@@ -101,6 +101,6 @@ if __name__ == "__main__":
             x = float(sys.argv[1])
             z = float(sys.argv[2])
             output_file = sys.argv[3]
-            locate_fortress(x, z, output_file)
+            locate_quadrants(x, z, output_file)
         except ValueError:
             print("Please provide valid numerical inputs for x and z.")
