@@ -10,11 +10,11 @@
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
             margin: 0;
-            padding: 0;
+            padding: 30px;
             height: 100vh;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            justify-content: start;
+            align-items: start;
         }
 
         .container {
@@ -22,9 +22,25 @@
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
-            text-align: center;
-            width: 100%;
+            text-align: left;
+            flex: 1;
+            display: flex;
+            flex-direction: row;
+        }
+
+        .form-container {}
+
+
+        #image-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            max-height: 620px;
+        }
+
+        #image-container img {
+            max-height: 100%;
         }
 
         h2 {
@@ -40,7 +56,7 @@
         }
 
         input[type="text"] {
-            width: 100%;
+            max-width: 200px;
             padding: 10px;
             margin-bottom: 20px;
             border: 1px solid #ddd;
@@ -76,16 +92,18 @@
 
 <body>
     <div class="container">
-        <h2>Enter Your Location</h2>
-        <form id="location-form" action="/" method="GET">
-            <label for="x_pos">X Position:</label><br>
-            <input type="text" id="x_pos" name="x_pos" required><br><br>
+        <div class="form-container">
+            <h2>Enter Your Location</h2>
+            <form id="location-form" action="/" method="GET">
+                <label for="x_pos">X Position:</label><br>
+                <input type="text" id="x_pos" name="x_pos" required><br><br>
 
-            <label for="z_pos">Z Position:</label><br>
-            <input type="text" id="z_pos" name="z_pos" required><br><br>
+                <label for="z_pos">Z Position:</label><br>
+                <input type="text" id="z_pos" name="z_pos" required><br><br>
 
-            <input type="submit" value="Submit">
-        </form>
+                <input type="submit" value="Submit">
+            </form>
+        </div>
 
         <div id="image-container"></div>
 
@@ -94,18 +112,18 @@
     <script>
         document.getElementById('location-form').addEventListener('submit', function (event) {
             event.preventDefault(); // Prevent the default form submission
-    
+
             // Disable the submit button
             const submitButton = event.target.querySelector('input[type="submit"]');
             submitButton.disabled = true;
-    
+
             // Get the input values
             const xPosition = document.getElementById('x_pos').value;
             const zPosition = document.getElementById('z_pos').value;
-    
+
             // API URL that takes the X and Z locations
             const apiUrl = `https://services.oskarmroz.com/quadrants?x_pos=${xPosition}&z_pos=${zPosition}`;
-    
+
             // Fetch image from the API
             fetch(apiUrl)
                 .then(response => {
@@ -118,7 +136,7 @@
                 .then(blob => {
                     // Convert the blob into an object URL
                     const imageUrl = URL.createObjectURL(blob);
-    
+
                     // Render the image below the form
                     const imageContainer = document.getElementById('image-container');
                     imageContainer.innerHTML = `<img id="location-image" src="${imageUrl}" alt="Location Image">`;
@@ -132,7 +150,7 @@
                 });
         });
     </script>
-     
+
 </body>
 
 </html>
