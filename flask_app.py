@@ -4,7 +4,7 @@ from quadrants import locate_quadrants  # Import the function from quadrants.py
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})  # Enable CORS for all routes and origins
+CORS(app)  # Enable CORS for all routes and origins
 
 @app.route('/quadrants', methods=['GET'])
 def quadrants():
