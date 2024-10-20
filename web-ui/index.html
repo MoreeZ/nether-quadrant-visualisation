@@ -74,12 +74,12 @@
 </head>
 <body>
     <h2>Enter Your Location</h2>
-    <form action="/submit_location" method="POST">
-        <label for="x_location">X Location:</label><br>
-        <input type="text" id="x_location" name="x_location" required><br><br>
+    <form action="/" method="GET">
+        <label for="x_pos">X Location:</label><br>
+        <input type="text" id="x_pos" name="x_pos" required><br><br>
 
-        <label for="z_location">Z Location:</label><br>
-        <input type="text" id="z_location" name="z_location" required><br><br>
+        <label for="z_pos">Z Location:</label><br>
+        <input type="text" id="z_pos" name="z_pos" required><br><br>
 
         <input type="submit" value="Submit">
     </form>
@@ -91,11 +91,11 @@
             event.preventDefault(); // Prevent the default form submission
 
             // Get the input values
-            const xLocation = document.getElementById('x_location').value;
-            const zLocation = document.getElementById('z_location').value;
+            const xPosition = document.getElementById('x_pos').value;
+            const zPosition = document.getElementById('z_pos').value;
 
             // Example API URL that takes the X and Z locations (replace this with your actual API URL)
-            const apiUrl = `https://example.com/api?x_location=${xLocation}&z_location=${zLocation}`;
+            const apiUrl = `https://example.com/api?x_pos=${xPosition}&z_pos=${zPosition}`;
 
             // Fetch data from the API
             fetch(apiUrl)
