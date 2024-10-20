@@ -28,9 +28,6 @@
             flex-direction: row;
         }
 
-        .form-container {}
-
-
         #image-container {
             flex: 1;
             display: flex;
@@ -111,7 +108,8 @@
 
     <script>
         document.getElementById('location-form').addEventListener('submit', function (event) {
-            event.preventDefault(); // Prevent the default form submission
+            // Prevent the default form submission
+            event.preventDefault();
 
             // Disable the submit button
             const submitButton = event.target.querySelector('input[type="submit"]');
@@ -120,6 +118,13 @@
             // Get the input values
             const xPosition = document.getElementById('x_pos').value;
             const zPosition = document.getElementById('z_pos').value;
+
+            // Validate if the input values are numbers (float/int)
+            if (isNaN(xPosition) || isNaN(zPosition) || xPosition === '' || zPosition === '') {
+                alert('Please enter valid numeric values for both X and Z positions.');
+                submitButton.disabled = false; // Re-enable the button if validation fails
+                return; // Stop form submission
+            }
 
             // API URL that takes the X and Z locations
             const apiUrl = `https://services.oskarmroz.com/quadrants?x_pos=${xPosition}&z_pos=${zPosition}`;
