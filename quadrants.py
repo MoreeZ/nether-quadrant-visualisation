@@ -35,8 +35,8 @@ def plot_quadrant_and_position(x, z, x_quad_start, z_quad_start, x_quad_end, z_q
     labeled_points = set()
 
     # Define the 9 quadrants (3x3 grid) centered on the input quadrant
-    for i in range(-1, 2):  # Three rows: above, centered, below
-        for j in range(-1, 2):  # Three columns: left, centered, right
+    for i in range(-2, 3):  # Three rows: above, centered, below
+        for j in range(-2, 3):  # Three columns: left, centered, right
             x_offset = x_quad_start + i * QUADRANT_SIZE
             z_offset = z_quad_start + j * QUADRANT_SIZE
             # Plot the surrounding quadrants as rectangles
