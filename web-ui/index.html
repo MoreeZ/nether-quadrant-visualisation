@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -72,22 +73,26 @@
         }
     </style>
 </head>
+
 <body>
-    <h2>Enter Your Location</h2>
-    <form action="/" method="GET">
-        <label for="x_pos">X Location:</label><br>
-        <input type="text" id="x_pos" name="x_pos" required><br><br>
+    <div class="container">
+        <h2>Enter Your Location</h2>
+        <form id="location-form" action="/" method="GET">
+            <label for="x_pos">X Position:</label><br>
+            <input type="text" id="x_pos" name="x_pos" required><br><br>
 
-        <label for="z_pos">Z Location:</label><br>
-        <input type="text" id="z_pos" name="z_pos" required><br><br>
+            <label for="z_pos">Z Position:</label><br>
+            <input type="text" id="z_pos" name="z_pos" required><br><br>
 
-        <input type="submit" value="Submit">
-    </form>
-    
-    <div id="image-container"></div>
+            <input type="submit" value="Submit">
+        </form>
+
+        <div id="image-container"></div>
+
+    </div>
 
     <script>
-        document.getElementById('location-form').addEventListener('submit', function(event) {
+        document.getElementById('location-form').addEventListener('submit', function (event) {
             event.preventDefault(); // Prevent the default form submission
 
             // Get the input values
