@@ -3,11 +3,12 @@ import math
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from matplotlib.lines import Line2D
+from io import BytesIO
 
 QUADRANT_SIZE = 432
 QUADRANT_GAP = 64
 
-def locate_quadrants(x, z, output_file):
+def locate_quadrants(x, z):
     # Calculate the quadrant of the input position
     x_quadrant = math.floor(x / QUADRANT_SIZE)
     z_quadrant = math.floor(z / QUADRANT_SIZE)
@@ -24,9 +25,9 @@ def locate_quadrants(x, z, output_file):
     print(f"TO X: {x_quad_end}, Z: {z_quad_end}")
 
     # Plot the Cartesian plane with the quadrants and the input point
-    plot_quadrant_and_position(x, z, x_quad_start, z_quad_start, x_quad_end, z_quad_end, output_file)
+    return plot_quadrant_and_position(x, z, x_quad_start, z_quad_start, x_quad_end, z_quad_end)
 
-def plot_quadrant_and_position(x, z, x_quad_start, z_quad_start, x_quad_end, z_quad_end, output_file):
+def plot_quadrant_and_position(x, z, x_quad_start, z_quad_start, x_quad_end, z_quad_end):
     # Increase the figure size (width=10 inches, height=10 inches)
     fig, ax = plt.subplots(figsize=(10, 10))
 
@@ -89,18 +90,10 @@ def plot_quadrant_and_position(x, z, x_quad_start, z_quad_start, x_quad_end, z_q
     player_dot = Line2D([0], [0], marker='o', color='w', label='Player Position', markerfacecolor='red', markersize=8)
     ax.legend(handles=[fortress_patch, player_dot], loc='upper left')
 
-    # Save the plot as an image file
-    plt.savefig(output_file, bbox_inches='tight')
-    print(f"Plot saved as {output_file}")
+    # Save the plot to a BytesIO buffer
+    img = BytesIO()
+    plt.savefig(img, format='png', bbox_inches='tight')
+    img.seek(0)  # Reset buffer position to the start
+    plt.close(fig)  # Close the figure to avoid display
 
-if __name__ == "__main__":
-    if len(sys.argv) != 4:
-        print("Usage: python fortress.py <x_position> <z_position> <output_file>")
-    else:
-        try:
-            x = float(sys.argv[1])
-            z = float(sys.argv[2])
-            output_file = sys.argv[3]
-            locate_quadrants(x, z, output_file)
-        except ValueError:
-            print("Please provide valid numerical inputs for x and z.")
+    return img  # Return the in-memory image
